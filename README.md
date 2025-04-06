@@ -1,0 +1,1 @@
+# Deleting-a-node-at-doublylinkedlist-in-c-
