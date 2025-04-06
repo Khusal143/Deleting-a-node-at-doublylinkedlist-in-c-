@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+// Function to insert a node at the end
+void insertEnd(struct Node** head_ref, int data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* last = *head_ref;
+
+    new_node->data = data;
+    new_node->next = NULL;
+
+    if (*head_ref == NULL) {
+        new_node->prev = NULL;
+        *head_ref = new_node;
+        return;
+    }
+
+    while (last->next != NULL)
+        last = last->next;
+
+    last->next = new_node;
+    new_node->prev = last;
+}
+
+// Function to delete a given node
+void deleteNode(struct Node** head_ref, struct Node* del) {
+    if (*head_ref == NULL || del == NULL)
+        return;
+
+    if (*head_ref == del)
+        *head_ref = del->next;
+
+    if (del->next != NULL)
+        del->next->prev = del->prev;
+
+    if (del->prev != NULL)
+        del->prev->next = del->next;
+
+    free(del);
+}
+
+// Function to display the list
+void display(struct Node* node) {
+    while (node != NULL) {
+        printf("%d ", node->data);
+        node = node->next;
+    }
+    printf("\n");
+}
+
+// Function to find a node with given data
+struct Node* findNode(struct Node* head, int key) {
+    while (head != NULL) {
+        if (head->data == key)
+            return head;
+        head = head->next;
+    }
+    return NULL;
+}
+
+int main() {
+    struct Node* head = NULL;
+
+    insertEnd(&head, 10);
+    insertEnd(&head, 20);
+    insertEnd(&head, 30);
+    insertEnd(&head, 40);
+
+    printf("Original List: ");
+    display(head);
+
+    int key = 20;
+    struct Node* nodeToDelete = findNode(head, key);
+    if (nodeToDelete != NULL) {
+        deleteNode(&head, nodeToDelete);
+        printf("List after deleting %d: ", key);
+        display(head);
+    } else {
+        printf("Node with value %d not found.\n", key);
+    }
+
+    return 0;
+}
